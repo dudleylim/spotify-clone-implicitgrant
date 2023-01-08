@@ -2,9 +2,9 @@ import React from 'react'
 
 const PlayerButton = ({functionArg, iconArg}) => {
     return (
-        <div>
+        <button onClick={functionArg}>
             {iconArg}
-        </div>
+        </button>
     )
 }
 
