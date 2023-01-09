@@ -16,9 +16,12 @@ const Player = (props) => {
                     <PlayerButton iconArg={<BsShuffle />}/>
                     <PlayerButton iconArg={<MdSkipPrevious />}/>
                     <PlayerButton functionArg={() => {contextApi.player.togglePlay()}} iconArg={<BsPlay />}/>
-                    <PlayerButton iconArg={<MdSkipNext />}/>
+                    <PlayerButton functionArg={() => {console.log(contextApi.token)}} iconArg={<MdSkipNext />}/>
                     <PlayerButton iconArg={<MdOutlineRepeat />}/>
-                    <button onClick={() => { contextApi.player.pause() }}>hi</button>
+                    <button onClick={() => {contextApi.player.resume().then(() => {
+                        console.log('resume');
+                        console.log(contextApi.player);
+                    })}}>hi</button>
                 </div>
                 <input type="range" name="" id="" />
                 
