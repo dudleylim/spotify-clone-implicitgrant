@@ -27,6 +27,7 @@ export const ContextApi = ({children}) => {
             token = urlParams.get('access_token');
             setToken(token);
             console.log(urlParams);
+            navigate('/');
         }
     }, []);
 
@@ -102,6 +103,7 @@ export const ContextApi = ({children}) => {
     
     // logout function
     const logout = () => {
+        player.disconnect();
         setToken("");
         window.localStorage.removeItem("token");
         navigate('/');
