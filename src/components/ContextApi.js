@@ -14,7 +14,7 @@ export const ContextApi = ({children}) => {
     const CLIENT_ID = 'e3b1df6e525e43a78f45aae2537a6534';
     const REDIRECT_URI = 'http://localhost:3000/';
     const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
-    const SCOPE = 'user-read-email streaming user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing';
+    const SCOPE = 'user-read-email streaming user-read-private user-read-playback-state user-modify-playback-state';
 
     const [token, setToken] = useState("");
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,65 +31,70 @@ export const ContextApi = ({children}) => {
     }, []);
 
     // playback sdk
-    const [player, setPlayer] = useState("");
+    const [player, setPlayer] = useState({});
 
     // https://developer.spotify.com/documentation/web-playback-sdk/guide/
+    
     useEffect(() => {
-        const script = document.createElement("script");
-        script.src = "https://sdk.scdn.co/spotify-player.js";
-        script.async = true;
+        if (token !== "") {
+            const script = document.createElement("script");
+            script.src = "https://sdk.scdn.co/spotify-player.js";
+            script.async = true;
+    
+            document.body.appendChild(script);
+    
+            window.onSpotifyWebPlaybackSDKReady = () => {
+    
+                const player = new window.Spotify.Player({
+                    name: 'Web Playback SDK',
+                    getOAuthToken: callback => { callback(token); },
+                    volume: 0.5
+                });
 
-        document.body.appendChild(script);
-
-        window.onSpotifyWebPlaybackSDKReady = () => {
-
-            const playa = new window.Spotify.Player({
-                name: 'Web Playback SDK',
-                getOAuthToken: callback => { callback(token); },
-                volume: 0.5
-            });
-
-            setPlayer(playa);
-
-            playa.addListener('ready', ({ device_id }) => {
-                console.log('Ready with Device ID', device_id);
-                console.log(playa);
-            });
-
-            playa.addListener('not_ready', ({ device_id }) => {
-                console.log('Device ID has gone offline', device_id);
-            });
-
-            playa.addListener('initialization_error', ({ message }) => { 
-                console.error(message);
-            });
-
-            playa.addListener('authentication_error', ({ message }) => {
-                console.error(message);
-            });
-
-            playa.addListener('account_error', ({ message }) => {
-                console.error(message);
-            });
-
-            playa.addListener('player_state_changed', ({
-                    position,
-                    duration,
-                    track_window: { current_track }
-                }) => {
-                    console.log('Currently Playing', current_track);
-                    console.log('Position in Song', position);
-                    console.log('Duration of Song', duration);
-            });
-
-            playa.connect().then(success => {
-                if (success) {
-                    console.log('The Web Playback SDK successfully connected to Spotify!');
-                } else {
-                    console.log('bruh')
-                }
-            });
-        };
+                setPlayer(player);
+    
+                player.addListener('ready', ({ device_id }) => {
+                    console.log('Ready with Device ID', device_id);
+                    console.log(player);
+                });
+    
+                player.addListener('not_ready', ({ device_id }) => {
+                    console.log('Device ID has gone offline', device_id);
+                });
+    
+                player.addListener('initialization_error', ({ message }) => { 
+                    console.error(message);
+                });
+    
+                player.addListener('authentication_error', ({ message }) => {
+                    console.error(message);
+                });
+    
+                player.addListener('account_error', ({ message }) => {
+                    console.error(message);
+                });
+    
+                player.addListener('player_state_changed', ({
+                        position,
+                        duration,
+                        track_window: { current_track }
+                    }) => {
+                        console.log('Currently Playing', current_track);
+                        console.log('Position in Song', position);
+                        console.log('Duration of Song', duration);
+                });
+    
+                player.connect().then(success => {
+                    if (success) {
+                        console.log('The Web Playback SDK successfully connected to Spotify!');
+                        
+                    } else {
+                        console.log('bruh')
+                    }
+                });
+    
+            };
+        }
     }, [token])
 
     // search fetch
@@ -98,16 +103,14 @@ export const ContextApi = ({children}) => {
     // logout function
     const logout = () => {
         setToken("");
-        player.disconnect();
-        setPlayer({});
         window.localStorage.removeItem("token");
         navigate('/');
     }
 
     // test function
-    const testing = () => {
-        player.togglePlay();
-    }
+    // const testing = () => {
+    //     player.togglePlay();
+    // }
 
 
 // context data
@@ -124,7 +127,7 @@ export const ContextApi = ({children}) => {
         setIsLoggedIn,
         logout,
         setPlayer,
-        testing,
+        // testing,
     };
 
 // return function
