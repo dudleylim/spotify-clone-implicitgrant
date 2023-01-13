@@ -24,10 +24,15 @@ export const ContextApi = ({children}) => {
         let token = window.localStorage.getItem("token");
 
         if (!token && urlParams) {
-            token = urlParams.get('access_token');
-            setToken(token);
-            console.log(urlParams);
-            navigate('/');
+            try {
+                token = urlParams.get('access_token');
+                setToken(token);
+                console.log(urlParams);
+                // navigate('/');
+            } catch (error) {
+                console.log(error)
+            }
+            
         }
     }, []);
 
@@ -37,7 +42,8 @@ export const ContextApi = ({children}) => {
     // https://developer.spotify.com/documentation/web-playback-sdk/guide/
     
     useEffect(() => {
-        if (token !== "") {
+        if (token !== "" && token !== null) {
+            console.log(token);
             const script = document.createElement("script");
             script.src = "https://sdk.scdn.co/spotify-player.js";
             script.async = true;
@@ -57,6 +63,10 @@ export const ContextApi = ({children}) => {
                 player.addListener('ready', ({ device_id }) => {
                     console.log('Ready with Device ID', device_id);
                     console.log(player);
+
+                    // POSSIBLE POF
+                    navigate('/');
+                    // POSSIBLE POF
                 });
     
                 player.addListener('not_ready', ({ device_id }) => {
@@ -81,6 +91,7 @@ export const ContextApi = ({children}) => {
                         track_window: { current_track }
                     }) => {
                         console.log('Currently Playing', current_track);
+                        setCurrentTrack(current_track);
                         console.log('Position in Song', position);
                         console.log('Duration of Song', duration);
                 });
@@ -96,9 +107,22 @@ export const ContextApi = ({children}) => {
     
             };
         }
-    }, [token])
+    }, [token, navigate])
 
-    // search fetch
+    // current track
+    const track = {
+        name: "",
+        album: {
+            images: [
+                { url: "" }
+            ]
+        },
+        artists: [
+            { name: "" }
+        ]
+    }
+
+    const [currentTrack, setCurrentTrack] = useState(track);
 
     
     // logout function
@@ -125,6 +149,7 @@ export const ContextApi = ({children}) => {
         token,
         isLoggedIn,
         player,
+        currentTrack,
         
         setIsLoggedIn,
         logout,

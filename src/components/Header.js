@@ -13,9 +13,11 @@ const Header = () => {
                     <button className='' onClick={() => {contextApi.logout()}}>Logout</button>       
                 </div>
             :
+                <>                
                 <a className='my-auto' href={`${contextApi.AUTH_ENDPOINT}?client_id=${contextApi.CLIENT_ID}&redirect_uri=${contextApi.REDIRECT_URI}&response_type=token&scope=${contextApi.SCOPE}`}>
                     <p>Login to spotify</p>
                 </a>
+                </>
             }
         </header>
     )

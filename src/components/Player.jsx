@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useRef } from 'react'
 import Context from './ContextApi';
 import PlayerButton from './PlayerButton'
 import { BsPlay, BsPause, BsShuffle, BsFillVolumeUpFill } from 'react-icons/bs';
@@ -17,82 +17,36 @@ const track = {
 }
 
 const Player = (props) => {
-
     const contextApi = useContext(Context);
-/*
-    const [is_paused, setPaused] = useState(false);
-    const [is_active, setActive] = useState(false);
-    const [player, setPlayer] = useState(undefined);
-    const [current_track, setTrack] = useState(track);
 
-    useEffect(() => {
-
-        if (contextApi.token !== "") {
-            const script = document.createElement("script");
-            script.src = "https://sdk.scdn.co/spotify-player.js";
-            script.async = true;
-    
-            document.body.appendChild(script);
-    
-            window.onSpotifyWebPlaybackSDKReady = () => {
-    
-                const player = new window.Spotify.Player({
-                    name: 'Web Playback SDK',
-                    getOAuthToken: cb => { cb(contextApi.token); },
-                    volume: 0.5
-                });
-    
-                setPlayer(player);
-    
-                player.addListener('ready', ({ device_id }) => {
-                    console.log('Ready with Device ID', device_id);
-                });
-    
-                player.addListener('not_ready', ({ device_id }) => {
-                    console.log('Device ID has gone offline', device_id);
-                });
-    
-                player.addListener('player_state_changed', ( state => {
-    
-                    if (!state) {
-                        return;
-                    }
-    
-                    setTrack(state.track_window.current_track);
-                    setPaused(state.paused);
-    
-                    player.getCurrentState().then( state => { 
-                        (!state)? setActive(false) : setActive(true) 
-                    });
-    
-                }));
-    
-                player.connect();
-    
-            };
-        }
-
-        
-    }, [contextApi.token]);
-*/
+    const progress = useRef();
 
     return (
-        <footer className='bg-red-100 flex flex-row'>
-            <div className='flex grow'>Album</div>
-            
-            <div className='flex flex-col grow-[2]'>
-                <div className="flex flex-row">
-                    <PlayerButton functionArg={() => {}} iconArg={<BsShuffle />}/>
-                    <PlayerButton iconArg={<MdSkipPrevious />}/>
-                    <PlayerButton functionArg={() => {contextApi.player.togglePlay()}} iconArg={<BsPlay />}/>
-                    <PlayerButton functionArg={() => {}} iconArg={<MdSkipNext />}/>
-                    <PlayerButton iconArg={<MdOutlineRepeat />}/>
+        <footer className='bg-red-100 flex flex-row pr-4'>
+            <div className='flex flex-row grow'>
+                <img src={contextApi.currentTrack.album.images[0].url} alt="" />
+                <div className='flex overflow-x-hidden'>
+                    <div className=''>
+                        <h1 className='overflow-x-hidden whitespace-nowrap'>{contextApi.currentTrack.name}</h1>
+                        <p className='overflow-x-hidden whitespace-nowrap'>{contextApi.currentTrack.artists[0].name}</p>
+                    </div>
                 </div>
-                <input type="range" name="" id="" />
+            </div>
+            
+            <div className='flex flex-col grow justify-center gap-4'>
+                <div className="flex flex-row justify-around">
+                    <PlayerButton functionArg={() => {console.log(contextApi.currentTrack)}} iconArg={<BsShuffle size={25} />}/>
+                    <PlayerButton functionArg={() => {}} iconArg={<MdSkipPrevious size={25} />}/>
+                    <PlayerButton functionArg={() => {contextApi.player.togglePlay()}} iconArg={<BsPlay size={25} />}/>
+                    <PlayerButton functionArg={() => {}} iconArg={<MdSkipNext size={25} />}/>
+                    <PlayerButton functionArg={() => {}} iconArg={<MdOutlineRepeat size={25} />}/>
+                </div>
+                <input  ref={progress} type="range" name="" id="" />
                 
             </div>
             
-            <div className='flex grow'>
+            <div className='flex grow items-center justify-end'>
+                <BsFillVolumeUpFill />
                 <input type="range" name="" id="" />
             </div>
         </footer>
