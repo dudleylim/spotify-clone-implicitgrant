@@ -20,6 +20,15 @@ const Player = (props) => {
     const contextApi = useContext(Context);
 
     const progress = useRef();
+    const volume = useRef();
+
+    // update progress; seeking feature
+
+
+    // changing volume
+    const onVolumeChange = () => {
+        contextApi.player.setVolume(volume.current.value / 100);
+    }
 
     return (
         <footer className='bg-red-100 flex flex-row pr-4'>
@@ -41,13 +50,13 @@ const Player = (props) => {
                     <PlayerButton functionArg={() => {}} iconArg={<MdSkipNext size={25} />}/>
                     <PlayerButton functionArg={() => {}} iconArg={<MdOutlineRepeat size={25} />}/>
                 </div>
-                <input  ref={progress} type="range" name="" id="" />
+                <input ref={progress} type="range" name="progress" id="progress" />
                 
             </div>
             
             <div className='flex grow items-center justify-end'>
                 <BsFillVolumeUpFill />
-                <input type="range" name="" id="" />
+                <input ref={volume} type="range" name="volume" id="volume" onChange={onVolumeChange} />
             </div>
         </footer>
     )
