@@ -22,8 +22,49 @@ const Player = (props) => {
     const progress = useRef();
     const volume = useRef();
 
-    // update progress; seeking feature
+    
 
+    // custom toggle play
+    const togglePlay = () => {
+        if (contextApi.isPlaying) {
+            contextApi.player.pause();
+            contextApi.setIsPlaying(false);
+        } else {
+            contextApi.player.resume();
+            contextApi.setIsPlaying(true);
+        }
+    }
+
+    // progress bar stuff
+    const [currentProgress, setCurrentProgress] = useState(0);
+    let progressSeconds = Math.trunc((currentProgress % 60000) / 1000);
+    let progressMinutes = Math.floor(currentProgress / 60000);
+
+    // match progress with actual progress
+    useEffect(() => {
+        setCurrentProgress(contextApi.updatedProgress)
+    }, [contextApi.updatedProgress])
+
+    // update progress while playing
+    useEffect(() => {
+        if (contextApi.isPlaying) {
+            const interval = setInterval(() => {
+                setCurrentProgress(currentProgress + 1000);
+                // console.log(currentProgress);
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [contextApi.isPlaying, currentProgress])
+
+    // move progress bar
+    useEffect(() => {
+        progress.current.value = (currentProgress / contextApi.currentDuration) * 100
+    }, [currentProgress, contextApi.currentDuration])
+
+    // seek progress bar
+    const onSeek = () => {
+        console.log('seeking');
+    }
 
     // changing volume
     const onVolumeChange = () => {
@@ -32,7 +73,7 @@ const Player = (props) => {
 
     return (
         <footer className='bg-red-100 flex flex-row pr-4'>
-            <div className='flex flex-row grow'>
+            <div className='flex flex-row grow basis-0'>
                 <img src={contextApi.currentTrack.album.images[0].url} alt="" />
                 <div className='flex overflow-x-hidden'>
                     <div className=''>
@@ -42,19 +83,46 @@ const Player = (props) => {
                 </div>
             </div>
             
-            <div className='flex flex-col grow justify-center gap-4'>
+            <div className='flex flex-col grow justify-center gap-4 basis-0'>
                 <div className="flex flex-row justify-around">
                     <PlayerButton functionArg={() => {console.log(contextApi.currentTrack)}} iconArg={<BsShuffle size={25} />}/>
                     <PlayerButton functionArg={() => {}} iconArg={<MdSkipPrevious size={25} />}/>
-                    <PlayerButton functionArg={() => {contextApi.player.togglePlay()}} iconArg={<BsPlay size={25} />}/>
+                    { contextApi.isPlaying ?
+                    <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPause size={25} />}/>
+                    :
+                    <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPlay size={25} />}/>
+                    }
                     <PlayerButton functionArg={() => {}} iconArg={<MdSkipNext size={25} />}/>
                     <PlayerButton functionArg={() => {}} iconArg={<MdOutlineRepeat size={25} />}/>
                 </div>
-                <input ref={progress} type="range" name="progress" id="progress" />
+                <div className="flex flex-row justify-between text-center">
+                    <p className='basis-0 grow'>{progressMinutes < 10 ? "0" + progressMinutes : progressMinutes}:{progressSeconds < 10 ? "0" + progressSeconds : progressSeconds}</p>
+                    <input className='basis-0 grow-[2]' ref={progress} type="range" name="progress" id="progress" 
+                    onChange={
+                        () => {
+                            onSeek();
+                        }
+                    } 
+                    onMouseDown={
+                        () => {
+                            if (contextApi.isPlaying) {
+                                togglePlay();
+                            }
+                        }
+                    }
+                    onMouseUp={
+                        () => {
+                            contextApi.player.seek((contextApi.currentDuration * progress.current.value / 100));
+                            console.log((contextApi.currentDuration * progress.current.value / 100));
+                        }
+                    }
+                    />
+                    <p className='basis-0 grow'>{contextApi.durationMinutes < 10 ? "0" + contextApi.durationMinutes : contextApi.durationMinutes}:{contextApi.durationSeconds < 10 ? "0" + contextApi.durationSeconds : contextApi.durationSeconds}</p>
+                </div>
                 
             </div>
             
-            <div className='flex grow items-center justify-end'>
+            <div className='flex grow items-center justify-end basis-0'>
                 <BsFillVolumeUpFill />
                 <input ref={volume} type="range" name="volume" id="volume" onChange={onVolumeChange} />
             </div>

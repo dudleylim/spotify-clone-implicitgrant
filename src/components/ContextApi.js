@@ -38,9 +38,9 @@ export const ContextApi = ({children}) => {
 
     // playback sdk
     const [player, setPlayer] = useState({});
+    const [isSongReady, setIsSongReady] = useState(false);
 
     // https://developer.spotify.com/documentation/web-playback-sdk/guide/
-    
     useEffect(() => {
         if (token !== "" && token !== null) {
             console.log(token);
@@ -93,7 +93,11 @@ export const ContextApi = ({children}) => {
                         console.log('Currently Playing', current_track);
                         setCurrentTrack(current_track);
                         console.log('Position in Song', position);
+                        setUpdatedProgress(position);
                         console.log('Duration of Song', duration);
+                        setCurrentDuration(duration);
+
+                        setIsSongReady(true);
                 });
     
                 player.connect().then(success => {
@@ -109,7 +113,7 @@ export const ContextApi = ({children}) => {
         }
     }, [token, navigate])
 
-    // current track
+    // playback states
     const track = {
         name: "",
         album: {
@@ -123,6 +127,11 @@ export const ContextApi = ({children}) => {
     }
 
     const [currentTrack, setCurrentTrack] = useState(track);
+    const [updatedProgress, setUpdatedProgress] = useState(0);
+    const [currentDuration, setCurrentDuration] = useState(0);
+    let durationSeconds = ((currentDuration % 60000) / 1000).toFixed(0);
+    let durationMinutes = Math.floor(currentDuration / 60000);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     
     // logout function
@@ -150,10 +159,17 @@ export const ContextApi = ({children}) => {
         isLoggedIn,
         player,
         currentTrack,
+        updatedProgress,
+        currentDuration,
+        durationSeconds,
+        durationMinutes,
+        isPlaying,
+        isSongReady,
         
         setIsLoggedIn,
         logout,
         setPlayer,
+        setIsPlaying,
         // testing,
     };
 
