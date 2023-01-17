@@ -22,7 +22,45 @@ const Player = (props) => {
     const progress = useRef();
     const volume = useRef();
 
+    // marquee stuff
+    const songTitle = useRef();
+    const songDiv = useRef();
+    const [songTitleWidth, setSongTitleWidth] = useState(0);
+    const [songDivWidth, setSongDivWidth] = useState(0);
+
     
+
+    // resize observer for marquee
+    // https://stackoverflow.com/questions/68629538/how-to-use-resizeobserver-to-check-only-bodys-width-change-in-javascript
+    useEffect(() => {
+        // const titleObserver = new ResizeObserver((entries) => {
+        //     for (const entry of entries) {
+        //         const width = entry.borderBoxSize?.[0].inlineSize;
+        //         if (typeof width === 'number') {
+        //             setSongTitleWidth(width)
+        //         }
+        //     }
+        // });
+        const divObserver = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const width = entry.borderBoxSize?.[0].inlineSize;
+                if (typeof width === 'number') {
+                    setSongDivWidth(width)
+                }
+            }
+        });
+        // titleObserver.observe(songTitle.current);
+        divObserver.observe(songDiv.current);
+    }, [])
+
+    useEffect(() => {
+        if (songTitle.current?.offsetWidth < songTitle.current?.scrollWidth) {
+            setSongTitleWidth(songTitle.current?.scrollWidth);
+        } else {
+            setSongTitleWidth(songTitle.current?.offsetWidth);
+        }
+    }, [songDivWidth]);
+
 
     // custom toggle play
     const togglePlay = () => {
@@ -75,11 +113,10 @@ const Player = (props) => {
         <footer className='bg-red-100 flex flex-row pr-4'>
             <div className='flex flex-row grow basis-0'>
                 <img src={contextApi.currentTrack.album.images[0].url} alt="" />
-                <div className='flex overflow-x-hidden'>
-                    <div className=''>
-                        <h1 className='overflow-x-hidden whitespace-nowrap'>{contextApi.currentTrack.name}</h1>
-                        <p className='overflow-x-hidden whitespace-nowrap'>{contextApi.currentTrack.artists[0].name}</p>
-                    </div>
+                <div ref={songDiv} className='flex flex-col justify-center overflow-x-hidden whitespace-nowrap gap-2 pl-1 border border-black basis-0 grow'>
+                    <p ref={songTitle} className={`font-bold text-xl inline-block ${songTitleWidth > songDivWidth ? 'animate-marquee' : ''} w-full`}>{contextApi.currentTrack.name ? contextApi.currentTrack.name : "---"}</p>
+                    <p className='overflow-x-hidden whitespace-nowrap'>{contextApi.currentTrack.artists[0].name ? contextApi.currentTrack.artists[0].name : "---"}</p>
+                    {/* <p>{songDiv.current ? (songTitleWidth + " " + songDivWidth) : ""}</p> */}
                 </div>
             </div>
             
@@ -93,7 +130,7 @@ const Player = (props) => {
                     <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPlay size={25} />}/>
                     }
                     <PlayerButton functionArg={() => {}} iconArg={<MdSkipNext size={25} />}/>
-                    <PlayerButton functionArg={() => {}} iconArg={<MdOutlineRepeat size={25} />}/>
+                    <PlayerButton functionArg={() => {console.log(songDiv.current)}} iconArg={<MdOutlineRepeat size={25} />}/>
                 </div>
                 <div className="flex flex-row justify-between text-center">
                     <p className='basis-0 grow'>{progressMinutes < 10 ? "0" + progressMinutes : progressMinutes}:{progressSeconds < 10 ? "0" + progressSeconds : progressSeconds}</p>
