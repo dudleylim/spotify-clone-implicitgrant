@@ -53,6 +53,11 @@ const Player = (props) => {
         divObserver.observe(songDiv.current);
     }, [])
 
+    // checks for title width after song change
+    useEffect(() => {
+        setSongTitleWidth(songTitle.current?.scrollWidth);
+    }, [contextApi.currentTrack])
+
     useEffect(() => {
         if (songTitle.current?.offsetWidth < songTitle.current?.scrollWidth) {
             setSongTitleWidth(songTitle.current?.scrollWidth);
@@ -110,10 +115,11 @@ const Player = (props) => {
     }
 
     return (
-        <footer className='bg-red-100 flex flex-row pr-4'>
+        <footer className='bg-neutral-800 text-gray-200 flex flex-row pr-4'>
             <div className='flex flex-row grow basis-0'>
                 <img src={contextApi.currentTrack.album.images[0].url} alt="" />
-                <div ref={songDiv} className='flex flex-col justify-center overflow-x-hidden whitespace-nowrap gap-2 pl-1 border border-black basis-0 grow'>
+                
+                <div ref={songDiv} className='flex flex-col justify-center overflow-x-hidden whitespace-nowrap gap-2 pl-1 basis-0 grow'>
                     <p ref={songTitle} className={`font-bold text-xl inline-block ${songTitleWidth > songDivWidth ? 'animate-marquee' : ''} w-full`}>{contextApi.currentTrack.name ? contextApi.currentTrack.name : "---"}</p>
                     <p className='overflow-x-hidden whitespace-nowrap'>{contextApi.currentTrack.artists[0].name ? contextApi.currentTrack.artists[0].name : "---"}</p>
                     {/* <p>{songDiv.current ? (songTitleWidth + " " + songDivWidth) : ""}</p> */}
@@ -121,16 +127,16 @@ const Player = (props) => {
             </div>
             
             <div className='flex flex-col grow justify-center gap-4 basis-0'>
-                <div className="flex flex-row justify-around">
-                    <PlayerButton functionArg={() => {console.log(contextApi.currentTrack)}} iconArg={<BsShuffle size={25} />}/>
-                    <PlayerButton functionArg={() => {}} iconArg={<MdSkipPrevious size={25} />}/>
+                <div className="flex flex-row justify-center gap-4">
+                    <PlayerButton functionArg={() => {console.log(contextApi.currentTrack)}} iconArg={<BsShuffle size={20} />}/>
+                    <PlayerButton functionArg={() => {contextApi.player.previousTrack()}} iconArg={<MdSkipPrevious size={20} />}/>
                     { contextApi.isPlaying ?
-                    <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPause size={25} />}/>
+                    <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPause size={20} />}/>
                     :
-                    <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPlay size={25} />}/>
+                    <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPlay size={20} />}/>
                     }
-                    <PlayerButton functionArg={() => {}} iconArg={<MdSkipNext size={25} />}/>
-                    <PlayerButton functionArg={() => {console.log(songDiv.current)}} iconArg={<MdOutlineRepeat size={25} />}/>
+                    <PlayerButton functionArg={() => {contextApi.player.nextTrack()}} iconArg={<MdSkipNext size={20} />}/>
+                    <PlayerButton functionArg={() => {console.log(songDiv.current)}} iconArg={<MdOutlineRepeat size={20} />}/>
                 </div>
                 <div className="flex flex-row justify-between text-center">
                     <p className='basis-0 grow'>{progressMinutes < 10 ? "0" + progressMinutes : progressMinutes}:{progressSeconds < 10 ? "0" + progressSeconds : progressSeconds}</p>

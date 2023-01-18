@@ -84,6 +84,10 @@ export const ContextApi = ({children}) => {
                 player.addListener('account_error', ({ message }) => {
                     console.error(message);
                 });
+
+                player.addListener('autoplay_failed', () => {
+                    console.log('autoplay failed');
+                });
     
                 player.addListener('player_state_changed', ({
                         position,
