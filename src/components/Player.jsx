@@ -166,13 +166,13 @@ const Player = (props) => {
             <div className='flex flex-col grow justify-center gap-4 basis-0'>
                 <div className="flex flex-row justify-center gap-4">
                     <PlayerButton functionArg={() => {console.log(contextApi.currentTrack)}} iconArg={<BsShuffle size={20} />}/>
-                    <PlayerButton functionArg={() => {contextApi.player.previousTrack()}} iconArg={<MdSkipPrevious size={20} />}/>
+                    <PlayerButton functionArg={() => {contextApi.player.previousTrack()}} iconArg={<MdSkipPrevious size={23} />}/>
                     { contextApi.isPlaying ?
-                    <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPause size={20} />}/>
+                    <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPause size={23} />}/>
                     :
-                    <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPlay size={20} />}/>
+                    <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPlay size={23} />}/>
                     }
-                    <PlayerButton functionArg={() => {contextApi.player.nextTrack()}} iconArg={<MdSkipNext size={20} />}/>
+                    <PlayerButton functionArg={() => {contextApi.player.nextTrack()}} iconArg={<MdSkipNext size={23} />}/>
                     <PlayerButton functionArg={() => {console.log(songDiv.current)}} iconArg={<MdOutlineRepeat size={20} />}/>
                 </div>
                 <div className="flex flex-row justify-between text-center">

@@ -43,6 +43,7 @@ export const ContextApi = ({children}) => {
 
     // https://developer.spotify.com/documentation/web-playback-sdk/guide/
     useEffect(() => {
+        console.log(token);
         if (token !== "" && token !== null) {
             console.log(token);
             const script = document.createElement("script");
