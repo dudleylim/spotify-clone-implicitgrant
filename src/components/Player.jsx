@@ -28,8 +28,6 @@ const Player = (props) => {
     const [songTitleWidth, setSongTitleWidth] = useState(0);
     const [songDivWidth, setSongDivWidth] = useState(0);
 
-    
-
     // resize observer for marquee
     // https://stackoverflow.com/questions/68629538/how-to-use-resizeobserver-to-check-only-bodys-width-change-in-javascript
     useEffect(() => {
@@ -78,6 +76,31 @@ const Player = (props) => {
         }
     }
 
+    // initialize shuffle and repeat state
+    const [isShuffling, setIsShuffling] = useState(false);
+    const [repeatState, setRepeatState] = useState(0);
+    useEffect(() => {
+        if (contextApi.isSongReady) {
+            contextApi.player.getCurrentState().then(state => {
+                setIsShuffling(state.shuffle);
+                setRepeatState(state.repeat_mode);
+                console.log(state.shuffle);
+                console.log(state.repeat_mode);
+            })
+        }
+    }, [contextApi.player, contextApi.isSongReady])
+
+    // shuffle toggle
+    const toggleShuffle = () => {
+
+    }
+
+    // repeat toggle
+    const toggleRepeat = () => {
+
+    }
+
+
     // progress bar stuff
     const [currentProgress, setCurrentProgress] = useState(0);
     let progressSeconds = Math.trunc((currentProgress % 60000) / 1000);
@@ -108,6 +131,20 @@ const Player = (props) => {
     const onSeek = () => {
         console.log('seeking');
     }
+    
+    // check if player is playing after song changes
+    useEffect(() => {
+        if (contextApi.isSongReady) {
+            contextApi.player.getCurrentState().then(state => {
+                if (state.paused === true) {
+                    contextApi.setIsPlaying(false);
+                    console.log(state.paused)
+                } else {
+                    contextApi.setIsPlaying(true);
+                }
+            })
+        }
+    }, [contextApi.currentTrack, contextApi.isSongReady, contextApi])
 
     // changing volume
     const onVolumeChange = () => {

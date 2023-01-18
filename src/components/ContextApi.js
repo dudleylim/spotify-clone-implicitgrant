@@ -39,6 +39,7 @@ export const ContextApi = ({children}) => {
     // playback sdk
     const [player, setPlayer] = useState({});
     const [isSongReady, setIsSongReady] = useState(false);
+    const [isPlayerReady, setIsPlayerReady] = useState(false);
 
     // https://developer.spotify.com/documentation/web-playback-sdk/guide/
     useEffect(() => {
@@ -107,7 +108,7 @@ export const ContextApi = ({children}) => {
                 player.connect().then(success => {
                     if (success) {
                         console.log('The Web Playback SDK successfully connected to Spotify!');
-                        
+                        setIsPlayerReady(true);
                     } else {
                         console.log('bruh')
                     }
@@ -169,6 +170,7 @@ export const ContextApi = ({children}) => {
         durationMinutes,
         isPlaying,
         isSongReady,
+        isPlayerReady,
         
         setIsLoggedIn,
         logout,
