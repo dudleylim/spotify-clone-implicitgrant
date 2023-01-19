@@ -111,11 +111,6 @@ const Player = (props) => {
         });
     }
 
-    useEffect(() => {
-
-    }, [repeatState])
-
-
     // progress bar stuff
     const [currentProgress, setCurrentProgress] = useState(0);
     let progressSeconds = Math.trunc((currentProgress % 60000) / 1000);
@@ -171,7 +166,7 @@ const Player = (props) => {
             <div className='flex flex-row grow basis-0'>
                 <img src={contextApi.currentTrack.album.images[0].url} alt="" />
                 
-                <div ref={songDiv} className='flex flex-col justify-center overflow-x-hidden whitespace-nowrap gap-2 pl-1 basis-0 grow'>
+                <div ref={songDiv} className='flex flex-col justify-center overflow-x-hidden whitespace-nowrap gap-2 pl-2 basis-0 grow'>
                     <p ref={songTitle} className={`font-bold text-xl inline-block ${songTitleWidth > songDivWidth ? 'animate-marquee' : ''} w-full`}>{contextApi.currentTrack.name ? contextApi.currentTrack.name : "---"}</p>
                     <p className='overflow-x-hidden whitespace-nowrap'>{contextApi.currentTrack.artists[0].name ? contextApi.currentTrack.artists[0].name : "---"}</p>
                     {/* <p>{songDiv.current ? (songTitleWidth + " " + songDivWidth) : ""}</p> */}
@@ -180,7 +175,7 @@ const Player = (props) => {
             
             <div className='flex flex-col grow justify-center gap-4 basis-0'>
                 <div className="flex flex-row justify-center gap-4">
-                    <PlayerButton functionArg={() => {toggleShuffle()}} iconArg={<BsShuffle size={20} />}/>
+                    <PlayerButton functionArg={() => {toggleShuffle()}} iconArg={ <BsShuffle size={20} />} addClass={isShuffling ? "text-green-400" : ""}/>
                     <PlayerButton functionArg={() => {contextApi.player.previousTrack()}} iconArg={<MdSkipPrevious size={23} />}/>
                     { contextApi.isPlaying ?
                     <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPause size={23} />}/>
@@ -188,7 +183,7 @@ const Player = (props) => {
                     <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPlay size={23} />}/>
                     }
                     <PlayerButton functionArg={() => {contextApi.player.nextTrack()}} iconArg={<MdSkipNext size={23} />}/>
-                    <PlayerButton functionArg={() => {toggleRepeat()}} iconArg={<MdOutlineRepeat size={20} />}/>
+                    <PlayerButton functionArg={() => {toggleRepeat()}} iconArg={repeatState === 'track' ? <MdOutlineRepeatOne size={20} /> : <MdOutlineRepeat size={20} />} addClass={(repeatState === 'track' || repeatState === 'context') ? "text-green-400" : ""}/>
                 </div>
                 <div className="flex flex-row justify-between text-center">
                     <p className='basis-0 grow'>{progressMinutes < 10 ? "0" + progressMinutes : progressMinutes}:{progressSeconds < 10 ? "0" + progressSeconds : progressSeconds}</p>
