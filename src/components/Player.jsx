@@ -4,18 +4,6 @@ import PlayerButton from './PlayerButton'
 import { BsPlay, BsPause, BsShuffle, BsFillVolumeUpFill } from 'react-icons/bs';
 import { MdSkipPrevious, MdSkipNext, MdOutlineRepeat, MdOutlineRepeatOne } from 'react-icons/md';
 
-const track = {
-    name: "",
-    album: {
-        images: [
-            { url: "" }
-        ]
-    },
-    artists: [
-        { name: "" }
-    ]
-}
-
 const Player = (props) => {
     const contextApi = useContext(Context);
 
@@ -78,12 +66,12 @@ const Player = (props) => {
 
     // initialize shuffle and repeat state
     const [isShuffling, setIsShuffling] = useState(false);
-    const [repeatState, setRepeatState] = useState(0);
+    const [repeatState, setRepeatState] = useState('off');
     useEffect(() => {
         if (contextApi.isSongReady) {
             contextApi.player.getCurrentState().then(state => {
                 setIsShuffling(state.shuffle);
-                setRepeatState(state.repeat_mode);
+                state.repeat_mode === 0 ? setRepeatState('off') : (state.repeat_mode === 1 ? setRepeatState('context') : setRepeatState('track'))
                 console.log(state.shuffle);
                 console.log(state.repeat_mode);
             })
@@ -91,14 +79,41 @@ const Player = (props) => {
     }, [contextApi.player, contextApi.isSongReady])
 
     // shuffle toggle
-    const toggleShuffle = () => {
-
+    const toggleShuffle = async () => {
+        isShuffling ? setIsShuffling(false) : setIsShuffling(true);
+        const response = await fetch(`https://api.spotify.com/v1/me/player/shuffle?state=${!isShuffling}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${contextApi.token}`
+            }
+        });
+        console.log(response.status);
     }
 
     // repeat toggle
-    const toggleRepeat = () => {
-
+    const toggleRepeat = async () => {
+        let nextRepeatState;
+        repeatState === 'off' ? nextRepeatState = 'context' : (repeatState === 'context' ? nextRepeatState = 'track' : nextRepeatState = 'off');
+        setRepeatState(nextRepeatState);
+        
+        // fetched twice because fetching once is unreliable; still only responds ~80% of the time
+        await fetch(`https://api.spotify.com/v1/me/player/repeat?state=${nextRepeatState}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${contextApi.token}`
+            }
+        });
+        await fetch(`https://api.spotify.com/v1/me/player/repeat?state=${nextRepeatState}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${contextApi.token}`
+            }
+        });
     }
+
+    useEffect(() => {
+
+    }, [repeatState])
 
 
     // progress bar stuff
@@ -165,7 +180,7 @@ const Player = (props) => {
             
             <div className='flex flex-col grow justify-center gap-4 basis-0'>
                 <div className="flex flex-row justify-center gap-4">
-                    <PlayerButton functionArg={() => {console.log(contextApi.currentTrack)}} iconArg={<BsShuffle size={20} />}/>
+                    <PlayerButton functionArg={() => {toggleShuffle()}} iconArg={<BsShuffle size={20} />}/>
                     <PlayerButton functionArg={() => {contextApi.player.previousTrack()}} iconArg={<MdSkipPrevious size={23} />}/>
                     { contextApi.isPlaying ?
                     <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPause size={23} />}/>
@@ -173,7 +188,7 @@ const Player = (props) => {
                     <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPlay size={23} />}/>
                     }
                     <PlayerButton functionArg={() => {contextApi.player.nextTrack()}} iconArg={<MdSkipNext size={23} />}/>
-                    <PlayerButton functionArg={() => {console.log(songDiv.current)}} iconArg={<MdOutlineRepeat size={20} />}/>
+                    <PlayerButton functionArg={() => {toggleRepeat()}} iconArg={<MdOutlineRepeat size={20} />}/>
                 </div>
                 <div className="flex flex-row justify-between text-center">
                     <p className='basis-0 grow'>{progressMinutes < 10 ? "0" + progressMinutes : progressMinutes}:{progressSeconds < 10 ? "0" + progressSeconds : progressSeconds}</p>
