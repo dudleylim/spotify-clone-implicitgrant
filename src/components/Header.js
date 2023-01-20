@@ -8,8 +8,7 @@ const Header = () => {
         <header className='bg-gray-700 flex flex-row justify-between p-2 text-gray-300'>
             <h1 className='font-bold text-3xl'>Logo</h1>
             {contextApi.token ? 
-                <div>
-                    <button>Dropdown profile</button>     
+                <div>   
                     <button className='' onClick={() => {contextApi.logout()}}>Logout</button>       
                 </div>
             :

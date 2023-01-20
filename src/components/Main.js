@@ -8,7 +8,7 @@ const Main = () => {
     const contextApi = useContext(Context);
 
     return (
-        <main className='flex flex-row bg-yellow-50'>
+        <main className='flex flex-row bg-neutral-600 text-neutral-300'>
             {!contextApi.token ? 
             <></>
             : 
