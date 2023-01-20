@@ -1,10 +1,11 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-const SidebarItem = ({children}) => {
+const SidebarItem = ({children, link}) => {
     return (
-        <div className='hover:bg-blue-100 py-4 px-2'>
+        <Link to={link} className='hover:bg-blue-100 py-4 px-2 hover:cursor-pointer'>
             {children}
-        </div>
+        </Link>
     )
 }
 

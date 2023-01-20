@@ -7,9 +7,6 @@ export default Context;
 
 export const ContextApi = ({children}) => {
 // variables, states, functions
-    // navigator
-    const navigate = useNavigate()
-
     // code for authorization
     const CLIENT_ID = 'e3b1df6e525e43a78f45aae2537a6534';
     const REDIRECT_URI = 'http://localhost:3000/';
@@ -22,6 +19,7 @@ export const ContextApi = ({children}) => {
     useEffect(() => {
         let urlParams = new URLSearchParams(window.location.hash.replace("#", "?"));
         let token = window.localStorage.getItem("token");
+        // const navigate = useNavigate()
 
         if (!token && urlParams) {
             try {
@@ -67,7 +65,7 @@ export const ContextApi = ({children}) => {
                     console.log(player);
 
                     // POSSIBLE POF
-                    navigate('/');
+                    // navigate('/');
                     // POSSIBLE POF
                 });
     
@@ -117,7 +115,7 @@ export const ContextApi = ({children}) => {
     
             };
         }
-    }, [token, navigate])
+    }, [token])
 
     // playback states
     const track = {
@@ -145,7 +143,7 @@ export const ContextApi = ({children}) => {
         player.disconnect();
         setToken("");
         window.localStorage.removeItem("token");
-        navigate('/');
+        // navigate('/');
     }
 
     // test function

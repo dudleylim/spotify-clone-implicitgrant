@@ -24,12 +24,13 @@ const Sidebar = () => {
                     <button type='submit'><AiOutlineSearch /></button>
             </form>
 
-            <SidebarItem>
-                My Music
+
+            <SidebarItem link={'/'}>
+                Now Playing
             </SidebarItem>
 
-            <SidebarItem>
-                Now Playing
+            <SidebarItem link={'/mymusic'}>
+                Liked Songs
             </SidebarItem>
 
             <hr />

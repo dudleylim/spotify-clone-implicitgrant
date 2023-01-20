@@ -15,7 +15,10 @@ const Main = () => {
             <div>
                 <Routes>
                     <Route path='/' exact element={<NowPlaying />} />
+
+                    {/* main songs is just playlist of liked songs */}
                     <Route path='/mymusic' element={<MainSongs />} />
+                    
                     {/* foreach playlist make link to specific playlist */}
                 </Routes>
             </div>}
