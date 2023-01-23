@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body
+{
+    height: 100%;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+/* only use this css file for grid/some flexbox styling; use tailwind/inline otherwise */
+#root
+{
+    display: grid;
+    grid-template-columns: [sidebar-start] 18em [sidebar-end main-start] 1fr [main-end];
+    grid-template-rows: [header-start] 3em [header-end other-start] 1fr [other-end player-start] 5.5em [player-end];
+    height: 100%;
+}
+
+header
+{
+    grid-column: 1 / -1;
+    grid-row: header;
+}
+
+main
+{
+    grid-column: main;
+    grid-row: other;
+}
+
+footer
+{
+    grid-column: 1 / -1;
+    grid-row: player
+}
+
+.progress
+{
+    width: 85%;
+    height: 85%;
+    border-radius: inherit;
+    background-color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle
+{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
