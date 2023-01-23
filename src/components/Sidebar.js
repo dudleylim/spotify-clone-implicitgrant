@@ -24,8 +24,11 @@ const Sidebar = () => {
                     <button type='submit'><AiOutlineSearch /></button>
             </form>
 
-
             <SidebarItem link={'/'}>
+                Spomodoro
+            </SidebarItem>
+
+            <SidebarItem link={'/nowplaying'}>
                 Now Playing
             </SidebarItem>
 
