@@ -2,6 +2,8 @@
 
 A Pomodoro Timer app which allows connection to your Spotify account and play music while timer counts down.
 
+Uses implicit grant OAuth type.
+
 ## [WIP Features/Functionalities]
 - spotify integration
 	- when integrated, display user playlists
@@ -9,6 +11,9 @@ A Pomodoro Timer app which allows connection to your Spotify account and play mu
 	- when timer starts, play current track/playlist
 	- when timer stops or break time, stop playing
 	- allow user to access player
+
+- settings menu
+	- allow user to set work and rest times
 
 - display track now playing in "/"
 
@@ -19,5 +24,6 @@ A Pomodoro Timer app which allows connection to your Spotify account and play mu
 - collapse sidebar
 
 - fix marquee
-- refresh access token
 - display liked tracks
+- refresh access token
+- switch to authorization code grant instead of implicit grant
