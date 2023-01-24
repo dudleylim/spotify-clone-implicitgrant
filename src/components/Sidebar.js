@@ -28,13 +28,13 @@ const Sidebar = () => {
                 Spomodoro
             </SidebarItem>
 
-            <SidebarItem link={'/nowplaying'}>
+            {/* <SidebarItem link={'/nowplaying'}>
                 Now Playing
             </SidebarItem>
 
             <SidebarItem link={'/mymusic'}>
                 Liked Songs
-            </SidebarItem>
+            </SidebarItem> */}
 
             <hr />
 

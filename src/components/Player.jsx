@@ -52,18 +52,6 @@ const Player = (props) => {
         }
     }, [songDivWidth]);
 
-
-    // custom toggle play
-    const togglePlay = () => {
-        if (contextApi.isPlaying) {
-            contextApi.player.pause();
-            contextApi.setIsPlaying(false);
-        } else {
-            contextApi.player.resume();
-            contextApi.setIsPlaying(true);
-        }
-    }
-
     // initialize shuffle and repeat state
     const [isShuffling, setIsShuffling] = useState(false);
     const [repeatState, setRepeatState] = useState('off');
@@ -178,9 +166,9 @@ const Player = (props) => {
                     <PlayerButton functionArg={() => {toggleShuffle()}} iconArg={ <BsShuffle size={20} />} addClass={isShuffling ? "text-green-400" : ""}/>
                     <PlayerButton functionArg={() => {contextApi.player.previousTrack()}} iconArg={<MdSkipPrevious size={23} />}/>
                     { contextApi.isPlaying ?
-                    <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPause size={23} />}/>
+                    <PlayerButton functionArg={() => {contextApi.togglePlay()}} iconArg={<BsPause size={23} />}/>
                     :
-                    <PlayerButton functionArg={() => {togglePlay()}} iconArg={<BsPlay size={23} />}/>
+                    <PlayerButton functionArg={() => {contextApi.togglePlay()}} iconArg={<BsPlay size={23} />}/>
                     }
                     <PlayerButton functionArg={() => {contextApi.player.nextTrack()}} iconArg={<MdSkipNext size={23} />}/>
                     <PlayerButton functionArg={() => {toggleRepeat()}} iconArg={repeatState === 'track' ? <MdOutlineRepeatOne size={20} /> : <MdOutlineRepeat size={20} />} addClass={(repeatState === 'track' || repeatState === 'context') ? "text-green-400" : ""}/>
@@ -196,7 +184,7 @@ const Player = (props) => {
                     onMouseDown={
                         () => {
                             if (contextApi.isPlaying) {
-                                togglePlay();
+                                contextApi.togglePlay();
                             }
                         }
                     }

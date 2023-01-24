@@ -1,5 +1,7 @@
 import React from 'react'
+import { useContext } from 'react';
 import { useState, useEffect } from 'react';
+import Context from './ContextApi';
 
 const ContextPomo = React.createContext();
 export default ContextPomo;
@@ -7,6 +9,8 @@ export default ContextPomo;
 export const ContextApiPomo = ({children}) => {
 
 // general states and variables
+    const contextApi = useContext(Context);
+
     const defaultWorkTime = 3;
     const defaultRestShortTime = 1;
     const defaultRestLongTime = 2;
@@ -67,7 +71,21 @@ export const ContextApiPomo = ({children}) => {
             }
         }, [currentTime, isWorking, pomoCounter, workTime, restShortTime, restLongTime])
 
+    // toggle play in player when timer starts
+        useEffect(() => {
+            if (contextApi.isSongReady) {
+                isTimerStarted ? contextApi.resume() : contextApi.pause();
+            }
+        }, [isTimerStarted, contextApi])
 
+    // toggle play depending on which tab timer is in
+        useEffect(() => {
+            if (contextApi.isSongReady) {
+                if (isTimerStarted) {
+                    isWorking ? contextApi.resume() : contextApi.pause();
+                }
+            }
+        }, [isWorking, isTimerStarted, contextApi])
 
     // toggle timer
         const toggleTimer = () => {
@@ -76,18 +94,25 @@ export const ContextApiPomo = ({children}) => {
 
     // switch tab
         const switchTab = (tab) => {
+            setIsTimerStarted(false);
             if (tab === 'work') {
                 setIsWorking(true);
                 setIsRestingShort(false);
                 setIsRestingLong(false);
+                setCurrentTime(workTime);
+                setTotalTime(workTime);
             } else if (tab === 'restShort') {
                 setIsWorking(false);
                 setIsRestingShort(true);
                 setIsRestingLong(false);
+                setCurrentTime(restShortTime);
+                setTotalTime(restShortTime);
             } else if (tab === 'restLong') {
                 setIsWorking(false);
                 setIsRestingShort(false);
                 setIsRestingLong(true);
+                setCurrentTime(restLongTime);
+                setTotalTime(restLongTime);
             }
         }
 

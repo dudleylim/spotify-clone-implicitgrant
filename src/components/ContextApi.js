@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Context = React.createContext();
 export default Context;
@@ -16,10 +16,11 @@ export const ContextApi = ({children}) => {
         const [token, setToken] = useState("");
         const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+        const navigate = useNavigate();
+
         useEffect(() => {
             let urlParams = new URLSearchParams(window.location.hash.replace("#", "?"));
             let token = window.localStorage.getItem("token");
-            // const navigate = useNavigate()
 
             if (!token && urlParams) {
                 try {
@@ -142,8 +143,32 @@ export const ContextApi = ({children}) => {
         const logout = () => {
             player.disconnect();
             setToken("");
+            // setPlayer({});
+            setIsSongReady(false);
+            setIsPlayerReady(false);
             window.localStorage.removeItem("token");
-            // navigate('/');
+            navigate('/');
+        }
+
+    // custom play functions
+        const resume = () => {
+            player.resume();
+            setIsPlaying(true);
+        }
+
+        const pause = () => {
+            player.pause();
+            setIsPlaying(false);
+        }
+    
+        const togglePlay = () => {
+            if (isPlaying) {
+                player.pause();
+                setIsPlaying(false);
+            } else {
+                player.resume();
+                setIsPlaying(true);
+            }
         }
 
     // test function
@@ -175,6 +200,7 @@ export const ContextApi = ({children}) => {
         logout,
         setPlayer,
         setIsPlaying,
+        togglePlay, pause, resume,
         // testing,
     };
 

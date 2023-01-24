@@ -6,7 +6,7 @@ const Header = () => {
 
     return (
         <header className='bg-gray-700 flex flex-row justify-between p-2 text-gray-300'>
-            <h1 className='font-bold text-3xl'>Logo</h1>
+            <h1 className='font-bold text-3xl'>SPOMODORO</h1>
             {contextApi.token ? 
                 <div>   
                     <button className='' onClick={() => {contextApi.logout()}}>Logout</button>       

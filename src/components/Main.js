@@ -10,7 +10,7 @@ const Main = () => {
 
     return (
         <main className='flex flex-row bg-neutral-700 text-neutral-300'>
-            <div>
+            <div className='w-full h-full'>
             <Routes>
 
                 
