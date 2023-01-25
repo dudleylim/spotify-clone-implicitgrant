@@ -11,9 +11,9 @@ export const ContextApiPomo = ({children}) => {
 // general states and variables
     const contextApi = useContext(Context);
 
-    const defaultWorkTime = 3;
-    const defaultRestShortTime = 1;
-    const defaultRestLongTime = 2;
+    const defaultWorkTime = 1500;
+    const defaultRestShortTime = 300;
+    const defaultRestLongTime = 900;
 
     const [workTime, setWorkTime] = useState(defaultWorkTime);
     const [restShortTime, setRestShortTime] = useState(defaultRestShortTime);
@@ -115,6 +115,11 @@ export const ContextApiPomo = ({children}) => {
                 setTotalTime(restLongTime);
             }
         }
+    
+    // skip tab by setting time to -1, triggering useeffect
+        const skip = () => {
+            setCurrentTime(-1);
+        }
 
 // context data
     const contextData = {
@@ -126,6 +131,7 @@ export const ContextApiPomo = ({children}) => {
 
         toggleTimer,
         switchTab,
+        skip,
     };
 
 // return function

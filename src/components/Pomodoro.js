@@ -25,7 +25,7 @@ const Pomodoro = () => {
 
             <div className='flex flex-row w-full'>
                 <button className={`p-2 flex-grow basis-1 text-lg font-semibold text-black transition-colors duration-300 active:bg-black/25 ${contextApiPomo.isTimerStarted ? 'bg-black/20 text-white' : 'bg-black/10'} border-r border-black/20`} onClick={() => {contextApiPomo.toggleTimer()}}>{contextApiPomo.isTimerStarted ? 'STOP' : 'START'}</button>
-                <button className='bg-black/10 p-2 flex-grow basis-1 text-lg font-semibold text-black transition-colors duration-300 active:bg-black/25' onClick={() => {}}>SKIP</button>
+                <button className='bg-black/10 p-2 flex-grow basis-1 text-lg font-semibold text-black transition-colors duration-300 active:bg-black/25' onClick={() => {contextApiPomo.skip()}}>SKIP</button>
             </div>
         </section>
     )
