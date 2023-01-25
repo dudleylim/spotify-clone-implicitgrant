@@ -15,6 +15,10 @@ export const ContextApiPomo = ({children}) => {
     const defaultRestShortTime = 300;
     const defaultRestLongTime = 900;
 
+    // const defaultWorkTime = 3;
+    // const defaultRestShortTime = 1;
+    // const defaultRestLongTime = 2;
+
     const [workTime, setWorkTime] = useState(defaultWorkTime);
     const [restShortTime, setRestShortTime] = useState(defaultRestShortTime);
     const [restLongTime, setRestLongTime] = useState(defaultRestLongTime);
@@ -54,11 +58,13 @@ export const ContextApiPomo = ({children}) => {
                         setIsRestingLong(true);
                         setCurrentTime(restLongTime);
                         setTotalTime(restLongTime);
+                        contextApi.pause();
                     } else {
                         setIsRestingShort(true);
                         setIsRestingLong(false);
                         setCurrentTime(restShortTime);
                         setTotalTime(restShortTime);
+                        contextApi.pause();
                     }
                     setPomoCounter(pomoCounter + 1);
                 } else {
@@ -67,29 +73,30 @@ export const ContextApiPomo = ({children}) => {
                     setIsRestingLong(false);
                     setCurrentTime(workTime);
                     setTotalTime(workTime);
+                    contextApi.resume();
                 } 
             }
         }, [currentTime, isWorking, pomoCounter, workTime, restShortTime, restLongTime])
 
     // toggle play in player when timer starts
-        useEffect(() => {
-            if (contextApi.isSongReady) {
-                isTimerStarted ? contextApi.resume() : contextApi.pause();
-            }
-        }, [isTimerStarted, contextApi])
-
-    // toggle play depending on which tab timer is in
-        useEffect(() => {
-            if (contextApi.isSongReady) {
-                if (isTimerStarted) {
-                    isWorking ? contextApi.resume() : contextApi.pause();
-                }
-            }
-        }, [isWorking, isTimerStarted, contextApi])
+        // useEffect(() => {
+        //     if (contextApi.isSongReady) {
+        //         if (isTimerStarted) {
+        //             isWorking ? contextApi.resume() : contextApi.pause();
+        //         }
+        //     }
+        // }, [isTimerStarted, contextApi, isWorking])
 
     // toggle timer
         const toggleTimer = () => {
             setIsTimerStarted(!isTimerStarted);
+
+            // toggle play if connected to spotify
+            if (contextApi.isSongReady) {
+                if (isWorking) {
+                    !isTimerStarted ? contextApi.resume() : contextApi.pause();
+                }
+            }
         }
 
     // switch tab
@@ -101,18 +108,21 @@ export const ContextApiPomo = ({children}) => {
                 setIsRestingLong(false);
                 setCurrentTime(workTime);
                 setTotalTime(workTime);
+                contextApi.resume();
             } else if (tab === 'restShort') {
                 setIsWorking(false);
                 setIsRestingShort(true);
                 setIsRestingLong(false);
                 setCurrentTime(restShortTime);
                 setTotalTime(restShortTime);
+                contextApi.pause();
             } else if (tab === 'restLong') {
                 setIsWorking(false);
                 setIsRestingShort(false);
                 setIsRestingLong(true);
                 setCurrentTime(restLongTime);
                 setTotalTime(restLongTime);
+                contextApi.pause();
             }
         }
     

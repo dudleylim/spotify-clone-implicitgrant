@@ -153,22 +153,29 @@ export const ContextApi = ({children}) => {
 
     // custom play functions
         const resume = () => {
-            player.resume();
-            setIsPlaying(true);
+            if (isSongReady) {
+                player.resume();
+                setIsPlaying(true);
+            }
         }
 
         const pause = () => {
-            player.pause();
-            setIsPlaying(false);
+            if (isSongReady) {
+                player.pause();
+                setIsPlaying(false);
+            }
+
         }
     
         const togglePlay = () => {
-            if (isPlaying) {
-                player.pause();
-                setIsPlaying(false);
-            } else {
-                player.resume();
-                setIsPlaying(true);
+            if (isSongReady) {
+                if (isPlaying) {
+                    player.pause();
+                    setIsPlaying(false);
+                } else {
+                    player.resume();
+                    setIsPlaying(true);
+                }
             }
         }
 
