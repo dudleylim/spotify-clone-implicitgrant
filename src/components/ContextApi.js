@@ -9,7 +9,8 @@ export const ContextApi = ({children}) => {
 // variables, states, functions
     // code for authorization
         const CLIENT_ID = 'e3b1df6e525e43a78f45aae2537a6534';
-        const REDIRECT_URI = 'http://localhost:3000/';
+        // const REDIRECT_URI = 'http://localhost:3000/';
+        const REDIRECT_URI = 'https://dudley-spomodoro.netlify.app/'; // uri of deployed app
         const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
         const SCOPE = 'user-read-email streaming user-read-private user-read-playback-state user-modify-playback-state';
 
